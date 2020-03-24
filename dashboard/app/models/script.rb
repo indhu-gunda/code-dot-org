@@ -138,6 +138,7 @@ class Script < ActiveRecord::Base
     project_widget_types
     teacher_resources
     stage_extras_available
+    text_to_speech_enabled
     has_verified_resources
     has_lesson_plan
     curriculum_path
@@ -209,6 +210,10 @@ class Script < ActiveRecord::Base
 
   def self.stage_extras_script_ids
     @@stage_extras_scripts ||= Script.all.select(&:stage_extras_available?).pluck(:id)
+  end
+
+  def self.text_to_speech_script_ids
+    Script.all.select(&:text_to_speech_enabled?).pluck(:id)
   end
 
   # Get the set of scripts that are valid for the current user, ignoring those
@@ -799,7 +804,11 @@ class Script < ActiveRecord::Base
       Script::CSD6_2019_NAME,
       Script::CSD1_PILOT_NAME,
       Script::CSD2_PILOT_NAME,
-      Script::CSD3_PILOT_NAME
+      Script::CSD3_PILOT_NAME,
+      Script::CSD2_2020_NAME,
+      Script::CSD3_2020_NAME,
+      Script::CSD4_2020_NAME,
+      Script::CSD6_2020_NAME
     ].include?(name)
   end
 
@@ -1359,6 +1368,7 @@ class Script < ActiveRecord::Base
       project_widget_types: project_widget_types,
       teacher_resources: teacher_resources,
       stage_extras_available: stage_extras_available,
+      text_to_speech_enabled: text_to_speech_enabled?,
       has_verified_resources: has_verified_resources?,
       has_lesson_plan: has_lesson_plan?,
       curriculum_path: curriculum_path,
@@ -1513,6 +1523,7 @@ class Script < ActiveRecord::Base
       project_widget_types: script_data[:project_widget_types],
       teacher_resources: script_data[:teacher_resources],
       stage_extras_available: script_data[:stage_extras_available] || false,
+      text_to_speech_enabled: script_data[:text_to_speech_enabled] || false,
       has_verified_resources: !!script_data[:has_verified_resources],
       has_lesson_plan: !!script_data[:has_lesson_plan],
       curriculum_path: script_data[:curriculum_path],
@@ -1582,6 +1593,7 @@ class Script < ActiveRecord::Base
     info[:category] = I18n.t("data.script.category.#{info[:category]}_category_name", default: info[:category])
     info[:supported_locales] = supported_locale_names
     info[:stage_extras_available] = stage_extras_available
+    info[:text_to_speech_enabled] = text_to_speech_enabled?
     if has_standards_associations?
       info[:standards] = standards
     end

@@ -11,6 +11,7 @@ export const sectionShape = PropTypes.shape({
   loginType: PropTypes.oneOf(Object.keys(SectionLoginType)),
   stageExtras: PropTypes.bool.isRequired,
   pairingAllowed: PropTypes.bool.isRequired,
+  autoplayEnabled: PropTypes.bool.isRequired,
   studentCount: PropTypes.number.isRequired,
   code: PropTypes.string.isRequired,
   courseId: PropTypes.number,
